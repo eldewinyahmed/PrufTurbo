@@ -1,0 +1,1967 @@
+{
+  "schema": "pruefturbo.standard_dictionary.v1",
+  "version": "v68",
+  "updated_on": "2026-06-01T11:46:34",
+  "dictionary": {
+    "ADAS / Radar / Camera": [
+      {
+        "entry": "Inject Camera Lane Detection",
+        "field": "Action"
+      },
+      {
+        "entry": "Inject Pedestrian Object",
+        "field": "Action"
+      },
+      {
+        "entry": "Inject Radar Object with Distance [P1] m and Speed [P2] kmh",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify ADAS Warning Active",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Automatic Emergency Braking Active",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Lane Keeping Assist Active",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Object Tracking Stability",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Save all Videos",
+        "field": "Post Action"
+      },
+      {
+        "entry": "Delete All Video",
+        "field": "Post Action",
+        "translation": "Delete_All_Video ();"
+      }
+    ],
+    "ADC / Sensor": [
+      {
+        "entry": "Expect sensor [P1] with value [P2]",
+        "field": "Expectation",
+        "translation": "checkSensor(\"[P1]\", [P2])",
+        "notes": "Sensor validation",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set sensor [P1] to value [P2]",
+        "field": "Action",
+        "translation": "setSensor(\"[P1]\", [P2])",
+        "notes": "Sensor stimulation",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Analog": [
+      {
+        "entry": "Set analog input [P1] to [P2] V",
+        "field": "Action"
+      },
+      {
+        "entry": "Ramp analog input [P1] from [P2] V to [P3] V within [P4] ms",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify analog output [P1] is between [P2] V and [P3] V",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Measure analog channel [P1] and store value as [P2]",
+        "field": "Action"
+      }
+    ],
+    "Analog IO": [
+      {
+        "entry": "Expect the Analog signal [P1] with Physical Value [P2] using the Raw Data [P3] V",
+        "field": "Expectation",
+        "translation": "checkAnalogSignal(\"[P1]\", [P2], [P3])",
+        "notes": "Analog input check",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect the Analog signal [P1] with Physical Value [P2] using the Raw Data [P3] V after [P4] ms",
+        "field": "Expectation",
+        "translation": "checkAnalogSignalAfter(\"[P1]\", [P2], [P3], [P4])",
+        "notes": "Analog after",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect the Analog signal [P1] with Physical Value [P2] using the Raw Data [P3] V during [P4] ms",
+        "field": "Expectation",
+        "translation": "checkAnalogSignalDuring(\"[P1]\", [P2], [P3], [P4])",
+        "notes": "Analog during",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set the Analog signal [P1] to Physical Value [P2] using the Raw Data [P3] V",
+        "field": "Action",
+        "translation": "setAnalogSignal(\"[P1]\", [P2], [P3])",
+        "notes": "Analog output set",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "AUTOSAR NM": [
+      {
+        "entry": "Expect ECU [P1] in Bus Sleep State",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect ECU [P1] in Normal Operation State",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect ECU [P1] in Ready Sleep State",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect ECU [P1] in Repeat Message State",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Send AUTOSAR NM Sleep Request",
+        "field": "Action"
+      },
+      {
+        "entry": "Send AUTOSAR NM Wakeup",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify NM Timeout [P1] ms",
+        "field": "Expectation"
+      }
+    ],
+    "CAN": [
+      {
+        "entry": "Send CAN frame [P1] with DLC [P2] and data [P3]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify CAN frame [P1] is received with data [P2]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Set CAN signal [P1] in message [P2] to value [P3]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify CAN signal [P1] in message [P2] equals [P3]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Start CAN bus monitoring on channel [P1] for [P2] ms",
+        "field": "Action"
+      }
+    ],
+    "CAN Signals": [
+      {
+        "entry": "Expect CAN Frame [P1] with Data [P2]",
+        "field": "Expectation",
+        "translation": "checkCanFrame(\"[P1]\", \"[P2]\")",
+        "notes": "Raw CAN frame receive",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN Frame [P1] with Data [P2] within [P3] ms",
+        "field": "Expectation",
+        "translation": "checkCanFrameWithin(\"[P1]\", \"[P2]\", [P3])",
+        "notes": "CAN frame timeout check",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Physical Value [P2]",
+        "field": "Expectation",
+        "translation": "checkCanSignalPhysical(\"[P1]\", [P2])",
+        "notes": "Check CAN physical value",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Physical Value [P2] after [P3] ms",
+        "field": "Expectation",
+        "translation": "checkCanSignalPhysicalAfter(\"[P1]\", [P2], [P3])",
+        "notes": "Check after delay",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Physical Value [P2] during [P3] ms",
+        "field": "Expectation",
+        "translation": "checkCanSignalPhysicalDuring(\"[P1]\", [P2], [P3])",
+        "notes": "Check during time",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Physical Value [P2] within [P3] ms",
+        "field": "Expectation",
+        "translation": "checkCanSignalPhysicalWithin(\"[P1]\", [P2], [P3])",
+        "notes": "Check within timeout",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Raw Value [P2]",
+        "field": "Expectation",
+        "translation": "checkCanSignalRaw(\"[P1]\", [P2])",
+        "notes": "Check CAN raw value",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Raw Value [P2] after [P3] ms",
+        "field": "Expectation",
+        "translation": "checkCanSignalRawAfter(\"[P1]\", [P2], [P3])",
+        "notes": "Check after delay",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Raw Value [P2] during [P3] ms",
+        "field": "Expectation",
+        "translation": "checkCanSignalRawDuring(\"[P1]\", [P2], [P3])",
+        "notes": "Check during time",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect CAN signal [P1] with Raw Value [P2] within [P3] ms",
+        "field": "Expectation",
+        "translation": "checkCanSignalRawWithin(\"[P1]\", [P2], [P3])",
+        "notes": "Check within timeout",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send CAN Frame [P1] with Data [P2]",
+        "field": "Action",
+        "translation": "sendCanFrame(\"[P1]\", \"[P2]\")",
+        "notes": "Raw CAN frame transmit",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set CAN signal [P1] to Physical Value [P2]",
+        "field": "Action",
+        "translation": "setCanSignalPhysical(\"[P1]\", [P2])",
+        "notes": "Set CAN physical value",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set CAN signal [P1] to Raw Value [P2]",
+        "field": "Action",
+        "translation": "setCanSignalRaw(\"[P1]\", [P2])",
+        "notes": "Set CAN raw value",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Diagnostics": [
+      {
+        "entry": "Send diagnostic request: [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify positive diagnostic response: [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify negative diagnostic response NRC [P1] for service [P2]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Start diagnostic session [P1]",
+        "field": "Pre Action"
+      },
+      {
+        "entry": "Run security access level [P1] using seed/key",
+        "field": "Pre Action"
+      }
+    ],
+    "Digital": [
+      {
+        "entry": "Set digital input [P1] to [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify digital output [P1] equals [P2]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Toggle digital input [P1] [P2] times with period [P3] ms",
+        "field": "Action"
+      }
+    ],
+    "Digital IO": [
+      {
+        "entry": "Expect the Digital signal [P1] with [P2] using the Raw Data [P3]",
+        "field": "Expectation",
+        "translation": "checkDigitalSignal(\"[P1]\", \"[P2]\", [P3])",
+        "notes": "Digital input",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect the Digital signal [P1] with [P2] using the Raw Data [P3] after [P4] ms",
+        "field": "Expectation",
+        "translation": "checkDigitalSignalAfter(\"[P1]\", \"[P2]\", [P3], [P4])",
+        "notes": "Digital after",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect the Digital signal [P1] with [P2] using the Raw Data [P3] during [P4] ms",
+        "field": "Expectation",
+        "translation": "checkDigitalSignalDuring(\"[P1]\", \"[P2]\", [P3], [P4])",
+        "notes": "Digital during",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set the Digital signal [P1] to [P2] using the Raw Data [P3]",
+        "field": "Action",
+        "translation": "setDigitalSignal(\"[P1]\", \"[P2]\", [P3])",
+        "notes": "Digital output",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Toggle the Digital signal [P1]",
+        "field": "Action",
+        "translation": "toggleDigitalSignal(\"[P1]\")",
+        "notes": "Digital toggle",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "DoIP / Ethernet Diagnostics": [
+      {
+        "entry": "Connect DoIP to ECU [P1]",
+        "field": "Action",
+        "translation": "connectDoip(\"[P1]\")",
+        "notes": "DoIP connect",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Disconnect DoIP from ECU [P1]",
+        "field": "Post Action",
+        "translation": "disconnectDoip(\"[P1]\")",
+        "notes": "DoIP disconnect",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect a DoIP [Diagnostics Positive Response] using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkDoipResponse(\"[P1]\")",
+        "notes": "DoIP response",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send a DoIP [Diagnostics Request] using Data [P1]",
+        "field": "Action",
+        "translation": "sendDoipRequest(\"[P1]\")",
+        "notes": "DoIP request",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send Ethernet diagnostics request to IP [P1] port [P2] using Data [P3]",
+        "field": "Action",
+        "translation": "sendEthernetDiagRequest(\"[P1]\", [P2], \"[P3]\")",
+        "notes": "Ethernet diagnostics",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Drive Modes": [
+      {
+        "entry": "Expect Drive Mode [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect Energy Mode [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Set Energy Mode to [P1]",
+        "field": "Action"
+      }
+    ],
+    "DTC Handling": [
+      {
+        "entry": "Clear DTCs",
+        "field": "Action",
+        "translation": "clearDTCs()",
+        "notes": "Clear DTC",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect DTC [P1] Active",
+        "field": "Expectation",
+        "translation": "checkDtcActive(\"[P1]\")",
+        "notes": "DTC active",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect DTC [P1] Not Active",
+        "field": "Expectation",
+        "translation": "checkDtcNotActive(\"[P1]\")",
+        "notes": "DTC not active",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect DTC [P1] Not Stored",
+        "field": "Expectation",
+        "translation": "checkDtcNotStored(\"[P1]\")",
+        "notes": "DTC not stored",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect DTC [P1] Stored",
+        "field": "Expectation",
+        "translation": "checkDtcStored(\"[P1]\")",
+        "notes": "DTC stored",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect DTC status [P1] equals [P2]",
+        "field": "Expectation",
+        "translation": "checkDtcStatus(\"[P1]\", \"[P2]\")",
+        "notes": "DTC status mask",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Read DTCs",
+        "field": "Action",
+        "translation": "readDTCs()",
+        "notes": "Read DTC",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "E2E Protection": [
+      {
+        "entry": "Expect E2E Error Detected",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect Safe State Activated",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Inject Invalid E2E Counter for signal [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Inject Invalid E2E CRC for signal [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify E2E Counter for signal [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify E2E CRC for signal [P1]",
+        "field": "Expectation"
+      }
+    ],
+    "Environment / Vehicle State": [
+      {
+        "entry": "Set Accelerator Pedal to [P1] percent",
+        "field": "Action",
+        "translation": "setAcceleratorPedal([P1])",
+        "notes": "Accelerator pedal",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Brake Pedal to [P1]",
+        "field": "Action",
+        "translation": "setBrakePedal(\"[P1]\")",
+        "notes": "Brake pedal",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Drive Mode to [P1]",
+        "field": "Action",
+        "translation": "setDriveMode(\"[P1]\")",
+        "notes": "Drive mode",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Engine Speed to [P1] rpm",
+        "field": "Action",
+        "translation": "setEngineSpeed([P1])",
+        "notes": "Engine speed",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Gear Position to [P1]",
+        "field": "Action",
+        "translation": "setGearPosition(\"[P1]\")",
+        "notes": "Gear position",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Humidity to [P1] percent",
+        "field": "Action",
+        "translation": "setHumidity([P1])",
+        "notes": "Humidity simulation",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Temperature to [P1] °C",
+        "field": "Action",
+        "translation": "setTemperature([P1])",
+        "notes": "Temperature simulation",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Vehicle Speed to [P1] kmh",
+        "field": "Action",
+        "translation": "setVehicleSpeed([P1])",
+        "notes": "Vehicle speed",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Ethernet Signals": [
+      {
+        "entry": "Expect Ethernet signal [P1] with Physical Value [P2]",
+        "field": "Expectation",
+        "translation": "checkEthernetSignalPhysical(\"[P1]\", [P2])",
+        "notes": "Check Ethernet physical",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect Ethernet signal [P1] with Physical Value [P2] after [P3] ms",
+        "field": "Expectation",
+        "translation": "checkEthernetSignalPhysicalAfter(\"[P1]\", [P2], [P3])",
+        "notes": "Check Ethernet after",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect Ethernet signal [P1] with Physical Value [P2] during [P3] ms",
+        "field": "Expectation",
+        "translation": "checkEthernetSignalPhysicalDuring(\"[P1]\", [P2], [P3])",
+        "notes": "Check Ethernet during",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect Ethernet signal [P1] with Raw Value [P2]",
+        "field": "Expectation",
+        "translation": "checkEthernetSignalRaw(\"[P1]\", [P2])",
+        "notes": "Check Ethernet raw",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Ethernet signal [P1] to Physical Value [P2]",
+        "field": "Action",
+        "translation": "setEthernetSignalPhysical(\"[P1]\", [P2])",
+        "notes": "Set Ethernet physical",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Ethernet signal [P1] to Raw Value [P2]",
+        "field": "Action",
+        "translation": "setEthernetSignalRaw(\"[P1]\", [P2])",
+        "notes": "Set Ethernet raw",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Fault Injection": [
+      {
+        "entry": "Disconnect CAN channel [P1]",
+        "field": "Post Action",
+        "translation": "disconnectCanChannel(\"[P1]\")",
+        "notes": "Disconnect CAN",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Disconnect ECU [P1]",
+        "field": "Post Action",
+        "translation": "disconnectEcu(\"[P1]\")",
+        "notes": "ECU disconnect",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Inject CAN BusOff",
+        "field": "Action",
+        "translation": "injectCanBusOff()",
+        "notes": "CAN bus off",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Inject CAN timeout on Frame [P1]",
+        "field": "Action",
+        "translation": "injectCanTimeout(\"[P1]\")",
+        "notes": "CAN timeout",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Inject LIN checksum error on Frame [P1]",
+        "field": "Action",
+        "translation": "injectLinChecksumError(\"[P1]\")",
+        "notes": "LIN checksum error",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Reconnect CAN channel [P1]",
+        "field": "Post Action",
+        "translation": "reconnectCanChannel(\"[P1]\")",
+        "notes": "Reconnect CAN",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Reconnect ECU [P1]",
+        "field": "Post Action",
+        "translation": "reconnectEcu(\"[P1]\")",
+        "notes": "ECU reconnect",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Recover CAN BusOff",
+        "field": "Post Action",
+        "translation": "recoverCanBusOff()",
+        "notes": "BusOff recovery",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Release CAN timeout on Frame [P1]",
+        "field": "Post Action",
+        "translation": "releaseCanTimeout(\"[P1]\")",
+        "notes": "Release CAN timeout",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Flash Programming": [
+      {
+        "entry": "ECU enters Bootloader Mode",
+        "field": "Action"
+      },
+      {
+        "entry": "ECU exits Bootloader Mode",
+        "field": "Action"
+      },
+      {
+        "entry": "Erase Memory Address [P1] Size [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Request Download using Address [P1] and Size [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Request Transfer Exit",
+        "field": "Action"
+      },
+      {
+        "entry": "Start Programming Session using Data [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Transfer Data Block [P1] using Data [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify Flash Checksum",
+        "field": "Expectation"
+      }
+    ],
+    "FlexRay Signals": [
+      {
+        "entry": "Expect FlexRay signal [P1] with Physical Value [P2]",
+        "field": "Expectation",
+        "translation": "checkFlexRaySignalPhysical(\"[P1]\", [P2])",
+        "notes": "Check FlexRay physical",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect FlexRay signal [P1] with Physical Value [P2] after [P3] ms",
+        "field": "Expectation",
+        "translation": "checkFlexRaySignalPhysicalAfter(\"[P1]\", [P2], [P3])",
+        "notes": "Check FlexRay after",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect FlexRay signal [P1] with Physical Value [P2] during [P3] ms",
+        "field": "Expectation",
+        "translation": "checkFlexRaySignalPhysicalDuring(\"[P1]\", [P2], [P3])",
+        "notes": "Check FlexRay during",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect FlexRay signal [P1] with Raw Value [P2]",
+        "field": "Expectation",
+        "translation": "checkFlexRaySignalRaw(\"[P1]\", [P2])",
+        "notes": "Check FlexRay raw",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set FlexRay signal [P1] to Physical Value [P2]",
+        "field": "Action",
+        "translation": "setFlexRaySignalPhysical(\"[P1]\", [P2])",
+        "notes": "Set FlexRay physical",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set FlexRay signal [P1] to Raw Value [P2]",
+        "field": "Action",
+        "translation": "setFlexRaySignalRaw(\"[P1]\", [P2])",
+        "notes": "Set FlexRay raw",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Generic Catch-All": [
+      {
+        "entry": "Condition [P1] is fulfilled",
+        "field": "Expectation",
+        "translation": "checkCondition(\"[P1]\")",
+        "notes": "Generic condition",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Condition [P1] is not fulfilled",
+        "field": "Expectation",
+        "translation": "checkConditionNotFulfilled(\"[P1]\")",
+        "notes": "Generic negative condition",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect signal [P1] equals [P2]",
+        "field": "Expectation",
+        "translation": "checkSignal(\"[P1]\", \"[P2]\")",
+        "notes": "Generic check",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect signal [P1] equals [P2] after [P3] ms",
+        "field": "Expectation",
+        "translation": "checkSignalAfter(\"[P1]\", \"[P2]\", [P3])",
+        "notes": "Generic check after",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect signal [P1] equals [P2] during [P3] ms",
+        "field": "Expectation",
+        "translation": "checkSignalDuring(\"[P1]\", \"[P2]\", [P3])",
+        "notes": "Generic check during",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Fault free",
+        "field": "Pre Action",
+        "translation": "write(\"Fault free\")",
+        "notes": "Generic precondition",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "No fault stored",
+        "field": "Pre Action",
+        "translation": "checkNoFaultStored()",
+        "notes": "Generic DTC check",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set signal [P1] to [P2]",
+        "field": "Action",
+        "translation": "setSignal(\"[P1]\", \"[P2]\")",
+        "notes": "Generic set",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "GPIO / PWM / Frequency": [
+      {
+        "entry": "Expect GPIO [P1] equals [P2]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Set GPIO [P1] to [P2]",
+        "field": "Action"
+      }
+    ],
+    "HIL Measurements": [
+      {
+        "entry": "Measure Duty Cycle on Channel [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Measure Signal Frequency on Channel [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Measure Signal Voltage on Channel [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Start Oscilloscope Measurement on Channel [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Stop Oscilloscope Measurement",
+        "field": "Action"
+      }
+    ],
+    "J1939": [
+      {
+        "entry": "Expect J1939 PGN [P1] with Data [P2]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Inject J1939 Timeout",
+        "field": "Action"
+      },
+      {
+        "entry": "Send J1939 PGN [P1] with Data [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify J1939 Address Claim",
+        "field": "Expectation"
+      }
+    ],
+    "LIN Diagnostics": [
+      {
+        "entry": "Expect a [Diagnostics Negative Response] using the LIN signal [P1] using Data [P2]",
+        "field": "Expectation",
+        "translation": "checkLinDiagnosticsResponse(\"[P2]\")",
+        "notes": "LIN negative response",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect a [Diagnostics Positive Response] for [P1] using the LIN signal [P2] on the LIN Frame [P3] using Data [P4]",
+        "field": "Expectation",
+        "translation": "checkLinDiagnosticsResponse(\"[P4]\")",
+        "notes": "LIN positive response",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send a [Diagnostics Request] to [P1] using the LIN signal [P2] on the LIN Frame [P3] using Data [P4]",
+        "field": "Action",
+        "translation": "sendLinDiagnosticsRequest(\"[P4]\")",
+        "notes": "LIN diagnostic request",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "LIN Signals": [
+      {
+        "entry": "Expect LIN signal [P1] with Physical Value [P2]",
+        "field": "Expectation",
+        "translation": "checkLINSignalPhysical(\"[P1]\", [P2])",
+        "notes": "Check LIN physical",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect LIN signal [P1] with Physical Value [P2] after [P3] ms",
+        "field": "Expectation",
+        "translation": "checkLINSignalPhysicalAfter(\"[P1]\", [P2], [P3])",
+        "notes": "Check LIN after",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect LIN signal [P1] with Physical Value [P2] during [P3] ms",
+        "field": "Expectation",
+        "translation": "checkLINSignalPhysicalDuring(\"[P1]\", [P2], [P3])",
+        "notes": "Check LIN during",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect LIN signal [P1] with Raw Value [P2]",
+        "field": "Expectation",
+        "translation": "checkLINSignalRaw(\"[P1]\", [P2])",
+        "notes": "Check LIN raw",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set LIN signal [P1] to Physical Value [P2]",
+        "field": "Action",
+        "translation": "setLINSignalPhysical(\"[P1]\", [P2])",
+        "notes": "Set LIN physical",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set LIN signal [P1] to Raw Value [P2]",
+        "field": "Action",
+        "translation": "setLINSignalRaw(\"[P1]\", [P2])",
+        "notes": "Set LIN raw",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Memory Validation": [
+      {
+        "entry": "Corrupt Memory Address [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Read Memory Address [P1] Size [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify Memory Content [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Memory Persistence after Reset",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify NVM Integrity",
+        "field": "Expectation"
+      }
+    ],
+    "Network Management": [
+      {
+        "entry": "Expect ECU [P1] to enter Full Communication",
+        "field": "Expectation",
+        "translation": "checkFullCommunication(\"[P1]\")",
+        "notes": "Full communication",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect ECU [P1] to enter Silent Communication",
+        "field": "Expectation",
+        "translation": "checkSilentCommunication(\"[P1]\")",
+        "notes": "Silent communication",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect ECU [P1] to enter Sleep Mode",
+        "field": "Expectation",
+        "translation": "checkSleepMode(\"[P1]\")",
+        "notes": "Sleep check",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send NM Frame",
+        "field": "Action",
+        "translation": "sendNmFrame()",
+        "notes": "NM frame",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Wait until ECU [P1] wakes up within [P2] ms",
+        "field": "Action",
+        "translation": "waitUntilEcuWakeup(\"[P1]\", [P2])",
+        "notes": "Wakeup timeout",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Wake up ECU [P1]",
+        "field": "Action",
+        "translation": "wakeupEcu(\"[P1]\")",
+        "notes": "Wakeup",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "OBD / UDS Core": [
+      {
+        "entry": "Expect [ReadDataByID] positive response for DID [P1] using Data [P2]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect Functional OBD response using Data [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect Negative Response using Data [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect NRC [P1] for Service [P2]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect Physical OBD response from ECU [P1] with Address [P2] using Data [P3]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect TesterPresent positive response using Data [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Send [ReadDataByID] request for DID [P1] using Data [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Send Functional OBD request using Data [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Send Physical OBD request to ECU [P1] with Address [P2] using Data [P3]",
+        "field": "Action"
+      },
+      {
+        "entry": "Send TesterPresent using Data [P1]",
+        "field": "Action"
+      }
+    ],
+    "OTA Update": [
+      {
+        "entry": "Download OTA Package [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Install OTA Package",
+        "field": "Action"
+      },
+      {
+        "entry": "Interrupt OTA Update during Download",
+        "field": "Action"
+      },
+      {
+        "entry": "Reboot ECU after OTA",
+        "field": "Action"
+      },
+      {
+        "entry": "Resume OTA Update",
+        "field": "Action"
+      },
+      {
+        "entry": "Start OTA Update",
+        "field": "Action"
+      },
+      {
+        "entry": "Validate OTA Package Signature",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify Rollback Mechanism",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Software Version [P1]",
+        "field": "Expectation"
+      }
+    ],
+    "Power / Ignition": [
+      {
+        "entry": "Perform Power Cycle",
+        "field": "Action",
+        "translation": "performPowerCycle()",
+        "notes": "Power cycle",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Reset ECU [P1]",
+        "field": "Action",
+        "translation": "resetEcu(\"[P1]\")",
+        "notes": "ECU reset",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Battery Voltage to [P1] V",
+        "field": "Action",
+        "translation": "setBatteryVoltage([P1])",
+        "notes": "Supply voltage",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set KL15 to OFF",
+        "field": "Action",
+        "translation": "setIgnitionOff()",
+        "notes": "Ignition off",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set KL15 to ON",
+        "field": "Action",
+        "translation": "setIgnitionOn()",
+        "notes": "Ignition on",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set KL30 to OFF",
+        "field": "Action",
+        "translation": "setBatteryOff()",
+        "notes": "Battery off",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set KL30 to ON",
+        "field": "Action",
+        "translation": "setBatteryOn()",
+        "notes": "Battery on",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Power Supply Channel [P1] to [P2] V",
+        "field": "Action",
+        "translation": "setPowerSupplyChannel(\"[P1]\", [P2])",
+        "notes": "Power supply channel",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Power Consumption": [
+      {
+        "entry": "Expect Current Consumption above [P1] mA",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect Current Consumption below [P1] mA",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Measure ECU Current Consumption",
+        "field": "Action"
+      },
+      {
+        "entry": "Start Current Measurement",
+        "field": "Action"
+      },
+      {
+        "entry": "Stop Current Measurement",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify Sleep Current below [P1] mA",
+        "field": "Expectation"
+      }
+    ],
+    "PWM / Frequency": [
+      {
+        "entry": "Expect Frequency signal [P1] with [P2] Hz",
+        "field": "Expectation",
+        "translation": "checkFrequency(\"[P1]\", [P2])",
+        "notes": "Frequency input",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect PWM signal [P1] duty cycle [P2] percent and frequency [P3] Hz",
+        "field": "Expectation",
+        "translation": "checkPwm(\"[P1]\", [P2], [P3])",
+        "notes": "PWM input",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set Frequency signal [P1] to [P2] Hz",
+        "field": "Action",
+        "translation": "setFrequency(\"[P1]\", [P2])",
+        "notes": "Frequency output",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set PWM signal [P1] duty cycle to [P2] percent and frequency to [P3] Hz",
+        "field": "Action",
+        "translation": "setPwm(\"[P1]\", [P2], [P3])",
+        "notes": "PWM output",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "REST / MQTT APIs": [
+      {
+        "entry": "Send MQTT Message to Topic [P1] with Payload [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Send REST GET Request to URL [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Send REST POST Request to URL [P1] with Payload [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify MQTT Message Received on Topic [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify REST Response Code [P1]",
+        "field": "Expectation"
+      }
+    ],
+    "Secure Diagnostics": [
+      {
+        "entry": "Expect Authentication Failure",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect Secure Channel Established",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Inject Invalid Authentication Token",
+        "field": "Action"
+      },
+      {
+        "entry": "Send Encrypted Diagnostics Payload [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Start Secure Diagnostics Session using Data [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Validate Secure Certificate [P1]",
+        "field": "Action"
+      }
+    ],
+    "Sleep / Wakeup Timing": [
+      {
+        "entry": "Put ECU [P1] into Sleep Mode",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify ECU [P1] enters sleep within [P2] ms",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify ECU [P1] wakes up within [P2] ms",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Network Sleep Sequence",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Wake up ECU [P1] using CAN",
+        "field": "Action"
+      },
+      {
+        "entry": "Wake up ECU [P1] using Ethernet",
+        "field": "Action"
+      },
+      {
+        "entry": "Wake up ECU [P1] using LIN",
+        "field": "Action"
+      }
+    ],
+    "SOME/IP": [
+      {
+        "entry": "Disconnect SOME/IP Service",
+        "field": "Post Action"
+      },
+      {
+        "entry": "Expect SOME/IP Response [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Reconnect SOME/IP Service",
+        "field": "Post Action"
+      },
+      {
+        "entry": "Send SOME/IP Event [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Send SOME/IP Method Request [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Subscribe to SOME/IP Event Group [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify SOME/IP Service Discovery",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify SOME/IP TTL Timeout",
+        "field": "Expectation"
+      }
+    ],
+    "Specs Extracted Dictionary": [
+      {
+        "entry": "\"ISw_Stat_ST3: IGN_[OFF] [0x01]\" (Klemme 15 )",
+        "field": "Action",
+        "translation": "\"ISw_Stat_ST3: IGN_[OFF] [0x01]\" (Klemme 15 )"
+      },
+      {
+        "entry": "\"ISw_Stat_ST3: IGN_[ON] [0x04]\"",
+        "field": "Action",
+        "translation": "\"ISw_Stat_ST3: IGN_[ON] [0x04]\""
+      },
+      {
+        "entry": "\"XX: Valid Response Value\"",
+        "field": "Expectation",
+        "translation": "\"XX: Valid Response Value\""
+      },
+      {
+        "entry": "[OBD_GST_CONSTANT_ZC_D_PhysicalRequest_CANIdentifier]",
+        "field": "Action",
+        "translation": "[OBD_GST_CONSTANT_ZC_D_PhysicalRequest_CANIdentifier]"
+      },
+      {
+        "entry": "[OBD_GST_CONSTANT_ZC_F_PhysicalRequest_CANIdentifier]",
+        "field": "Action",
+        "translation": "[OBD_GST_CONSTANT_ZC_F_PhysicalRequest_CANIdentifier]"
+      },
+      {
+        "entry": "[OBD_GST_CONSTANT_ZC_P_PhysicalRequest_CANIdentifier]",
+        "field": "Action",
+        "translation": "[OBD_GST_CONSTANT_ZC_P_PhysicalRequest_CANIdentifier]"
+      },
+      {
+        "entry": "Calculate delta between both timestamps",
+        "field": "Action",
+        "translation": "Calculate delta between both timestamps"
+      },
+      {
+        "entry": "Calculate delta between both timestamps (Tx & Rx)",
+        "field": "Action",
+        "translation": "Calculate delta between both timestamps (Tx & Rx)"
+      },
+      {
+        "entry": "Capture first response frame (FF) timestamp",
+        "field": "Expectation",
+        "translation": "Capture first response frame (FF) timestamp"
+      },
+      {
+        "entry": "Capture first response frame timestamp",
+        "field": "Expectation",
+        "translation": "Capture first response frame timestamp"
+      },
+      {
+        "entry": "Capture first response timestamp (Rx)",
+        "field": "Expectation",
+        "translation": "Capture first response timestamp (Rx)"
+      },
+      {
+        "entry": "Capture request timestamp",
+        "field": "Action",
+        "translation": "Capture request timestamp"
+      },
+      {
+        "entry": "Capture request timestamp (Tx)",
+        "field": "Action",
+        "translation": "Capture request timestamp (Tx)"
+      },
+      {
+        "entry": "Capture response timestamp",
+        "field": "Expectation",
+        "translation": "Capture response timestamp"
+      },
+      {
+        "entry": "Configure tester node using:",
+        "field": "Action",
+        "translation": "Configure tester node using:"
+      },
+      {
+        "entry": "Default Session",
+        "field": "Action",
+        "translation": "Default Session"
+      },
+      {
+        "entry": "Delta time is less than or equal to OBD_GST_CONSTANT_ResponseTime",
+        "field": "Expectation",
+        "translation": "Delta time is less than or equal to OBD_GST_CONSTANT_ResponseTime"
+      },
+      {
+        "entry": "ECU provides positive response for [DID 0xF400: ][62 F4 00] XX...",
+        "field": "Expectation",
+        "translation": "ECU provides positive response for [DID 0xF400: ][62 F4 00] XX..."
+      },
+      {
+        "entry": "ECU responds [with valid positive response for DID 0xF405: ][62 F4 05] XX",
+        "field": "Expectation",
+        "translation": "ECU responds [with valid positive response for DID 0xF405: ][62 F4 05] XX"
+      },
+      {
+        "entry": "ECU responds with valid negative response (NRC): [7F 22 31]",
+        "field": "Expectation",
+        "translation": "ECU responds with valid negative response (NRC): [7F 22 31]"
+      },
+      {
+        "entry": "Ignition [OFF]",
+        "field": "Action",
+        "translation": "Ignition [OFF]"
+      },
+      {
+        "entry": "Ignition [ON] (Klemme 15)",
+        "field": "Action",
+        "translation": "Ignition [ON] (Klemme 15)"
+      },
+      {
+        "entry": "OBD_GST_CONSTANT_FunctionalRequest_CANIdentifier",
+        "field": "Action",
+        "translation": "OBD_GST_CONSTANT_FunctionalRequest_CANIdentifier"
+      },
+      {
+        "entry": "OBD_GST_CONSTANT_ZC_D_PhysicalRequest_CANIdentifier",
+        "field": "Action",
+        "translation": "OBD_GST_CONSTANT_ZC_D_PhysicalRequest_CANIdentifier"
+      },
+      {
+        "entry": "OBD_GST_CONSTANT_ZC_F_PhysicalRequest_CANIdentifier",
+        "field": "Action",
+        "translation": "OBD_GST_CONSTANT_ZC_F_PhysicalRequest_CANIdentifier"
+      },
+      {
+        "entry": "OBD_GST_CONSTANT_ZC_P_PhysicalRequest_CANIdentifier",
+        "field": "Action",
+        "translation": "OBD_GST_CONSTANT_ZC_P_PhysicalRequest_CANIdentifier"
+      },
+      {
+        "entry": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_D_Response_CANIdentifier",
+        "field": "Expectation",
+        "translation": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_D_Response_CANIdentifier"
+      },
+      {
+        "entry": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_F_Response_CANIdentifier",
+        "field": "Expectation",
+        "translation": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_F_Response_CANIdentifier"
+      },
+      {
+        "entry": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_P_Response_CANIdentifier",
+        "field": "Expectation",
+        "translation": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_P_Response_CANIdentifier"
+      },
+      {
+        "entry": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_R_Response_CANIdentifier",
+        "field": "Expectation",
+        "translation": "Positive Response for [Read Request] [0x62 E1 00 ][XX] using CAN ID: OBD_GST_CONSTANT_ZC_R_Response_CANIdentifier"
+      },
+      {
+        "entry": "Response: ][62 F4 0C] XX XX",
+        "field": "Expectation",
+        "translation": "Response: ][62 F4 0C] XX XX"
+      },
+      {
+        "entry": "Send request: [22 F4 00]",
+        "field": "Action",
+        "translation": "Send request: [22 F4 00]"
+      },
+      {
+        "entry": "Send request: [22 F4 05]",
+        "field": "Action",
+        "translation": "Send request: [22 F4 05]"
+      },
+      {
+        "entry": "Send request: [22 F4 0C]",
+        "field": "Action",
+        "translation": "Send request: [22 F4 0C]"
+      },
+      {
+        "entry": "Send request: [22 FF FF]",
+        "field": "Action",
+        "translation": "Send request: [22 FF FF]"
+      },
+      {
+        "entry": "Send Service [$22] functional request [Read DID 0x22:] [22 E1 00] [\"$E100] - Used OBD Protocol\" using CAN ID:",
+        "field": "Action",
+        "translation": "Send Service [$22] functional request [Read DID 0x22:] [22 E1 00] [\"$E100] - Used OBD Protocol\" using CAN ID:"
+      },
+      {
+        "entry": "Send Service [$22] physical request [Read DID 0x22:] [22 E1 00] [\"$E100] - Used OBD Protocol\" using CAN ID:",
+        "field": "Action",
+        "translation": "Send Service [$22] physical request [Read DID 0x22:] [22 E1 00] [\"$E100] - Used OBD Protocol\" using CAN ID:"
+      }
+    ],
+    "Standard CAPL Dictionary": [],
+    "Testbench Control": [
+      {
+        "entry": "Fail test step [P1]",
+        "field": "Expectation",
+        "translation": "testStepFail(\"[P1]\")",
+        "notes": "Fail step",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Initialize test environment",
+        "field": "Pre Action",
+        "translation": "initializeEnvironment()",
+        "notes": "Initialize",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Pass test step [P1]",
+        "field": "Action",
+        "translation": "testStepPass(\"[P1]\")",
+        "notes": "Pass step",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Shutdown test environment",
+        "field": "Action",
+        "translation": "shutdownEnvironment()",
+        "notes": "Shutdown",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Start logging",
+        "field": "Action",
+        "translation": "startLogging()",
+        "notes": "Logging start",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Start measurement",
+        "field": "Action",
+        "translation": "startMeasurement()",
+        "notes": "CANoe measurement start",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Stop logging",
+        "field": "Action",
+        "translation": "stopLogging()",
+        "notes": "Logging stop",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Stop measurement",
+        "field": "Action",
+        "translation": "stopMeasurement()",
+        "notes": "CANoe measurement stop",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Write comment [P1]",
+        "field": "Action",
+        "translation": "write(\"[P1]\")",
+        "notes": "Write log",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "Timing": [
+      {
+        "entry": "Wait for [P1] ms",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify response time is less than or equal to [P1] ms",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Measure time between [P1] and [P2] and store as [P3]",
+        "field": "Action"
+      }
+    ],
+    "Timing / Performance": [
+      {
+        "entry": "Expect cycle time [P1] ms on CAN Frame [P2]",
+        "field": "Expectation",
+        "translation": "checkCycleTime(\"[P2]\", [P1])",
+        "notes": "Cycle time check",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect response within [P1] ms",
+        "field": "Expectation",
+        "translation": "checkResponseWithin([P1])",
+        "notes": "Response timeout",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect signal [P1] changes after [P2] ms",
+        "field": "Expectation",
+        "translation": "checkSignalChangesAfter(\"[P1]\", [P2])",
+        "notes": "Signal change delay",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect signal [P1] stable during [P2] ms",
+        "field": "Expectation",
+        "translation": "checkSignalStableDuring(\"[P1]\", [P2])",
+        "notes": "Signal stability",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Measure response time",
+        "field": "Action",
+        "translation": "startResponseTimeMeasurement()",
+        "notes": "Start response measurement",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Stop response time measurement",
+        "field": "Action",
+        "translation": "stopResponseTimeMeasurement()",
+        "notes": "Stop response measurement",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Wait [P1] ms",
+        "field": "Action",
+        "translation": "testWaitForTimeout([P1])",
+        "notes": "Wait milliseconds",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Wait [P1] s",
+        "field": "Action",
+        "translation": "testWaitForTimeout(([P1] * 1000))",
+        "notes": "Wait seconds",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "UDS CAN Diagnostics": [
+      {
+        "entry": "Expect a [Diagnostics Negative Response] using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Negative response, e.g. 7F xx NRC",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect a [Diagnostics Positive Response] for [P1] using the CAN signal [P2] on the CAN Frame [P3] using Data [P4] from ECU [P5] with Address [P6]",
+        "field": "Expectation",
+        "translation": "checkUdsResponseFromAddress(\"[P5]\", \"[P6]\", \"[P4]\")",
+        "notes": "Physical response with ECU/address",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect a Functional [Diagnostics Positive Response] for [P1] using the CAN signal [P2] on the CAN Frame [P3] using Data [P4]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P4]\")",
+        "notes": "Functional positive response",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect No Response",
+        "field": "Expectation",
+        "translation": "checkNoResponse()",
+        "notes": "No response expected",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect No Response during [P1] ms",
+        "field": "Expectation",
+        "translation": "checkNoResponseDuring([P1])",
+        "notes": "No response timeout",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect response: [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Generic UDS response",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send a Functional [Diagnostics Request] to [P1] using the CAN signal [P2] on the CAN Frame [P3] using Data [P4]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P4]\", requestLen)",
+        "notes": "Functional CAN diagnostic request",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send a Physical [Diagnostics Request] to [P1] using the CAN signal [P2] on the CAN Frame [P3] using Data [P4]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P4]\", requestLen)",
+        "notes": "Physical CAN diagnostic request",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send a Physical [Diagnostics Request] to [P1] using the CAN signal [P2] on the CAN Frame [P3] using Data [P4] to ECU [P5] with Address [P6]",
+        "field": "Action",
+        "translation": "sendUdsRequestToAddress(\"[P5]\", \"[P6]\", \"[P4]\", requestLen)",
+        "notes": "Physical request with ECU/address",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send request: [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "Generic UDS request",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "UDS SecurityAccess": [
+      {
+        "entry": "Calculate SecurityAccess Key from Seed [P1] using Algorithm [P2]",
+        "field": "Action"
+      },
+      {
+        "entry": "Expect SecurityAccess Denied using Data [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect SecurityAccess Granted using Data [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Expect SecurityAccess Seed Response using Data [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Send SecurityAccess Key using Data [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Send SecurityAccess Seed Request Level [P1] using Data [P2]",
+        "field": "Action"
+      }
+    ],
+    "UDS Services": [
+      {
+        "entry": "Expect [ClearDiagnosticInformation] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 14",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [CommunicationControl] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 28",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [ControlDTCSetting] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 85",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [DiagnosticSessionControl] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 10",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [ECUReset] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 11",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [InputOutputControlByID] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 2F",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [ReadDataByID] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 22",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [ReadDTCInformation] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 19",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [ReadMemoryByAddress] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 23",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [RoutineControl] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 31",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [SecurityAccess] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 27",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [TesterPresent] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 3E",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect [WriteDataByID] positive response using Data [P1]",
+        "field": "Expectation",
+        "translation": "checkUdsResponse(resp, \"[P1]\")",
+        "notes": "Positive response for SID 2E",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [ClearDiagnosticInformation] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 14",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [CommunicationControl] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 28",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [ControlDTCSetting] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 85",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [DiagnosticSessionControl] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 10",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [ECUReset] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 11",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [InputOutputControlByID] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 2F",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [ReadDataByID] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 22",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [ReadDTCInformation] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 19",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [ReadMemoryByAddress] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 23",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [RoutineControl] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 31",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [SecurityAccess] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 27",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [TesterPresent] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 3E",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Send [WriteDataByID] request using Data [P1]",
+        "field": "Action",
+        "translation": "sendUdsRequest(ecu, \"[P1]\", requestLen)",
+        "notes": "UDS SID 2E",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "XCP / Calibration": [
+      {
+        "entry": "Connect XCP to ECU [P1]",
+        "field": "Action",
+        "translation": "connectXcp(\"[P1]\")",
+        "notes": "XCP connect",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Disconnect XCP from ECU [P1]",
+        "field": "Post Action",
+        "translation": "disconnectXcp(\"[P1]\")",
+        "notes": "XCP disconnect",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Expect measurement [P1] with value [P2]",
+        "field": "Expectation",
+        "translation": "checkMeasurement(\"[P1]\", [P2])",
+        "notes": "Measurement check",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Set calibration parameter [P1] to [P2]",
+        "field": "Action",
+        "translation": "setCalibrationParameter(\"[P1]\", [P2])",
+        "notes": "Calibration write",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Start measurement [P1]",
+        "field": "Action",
+        "translation": "startMeasurement(\"[P1]\")",
+        "notes": "Start DAQ",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      },
+      {
+        "entry": "Stop measurement [P1]",
+        "field": "Action",
+        "translation": "stopMeasurement(\"[P1]\")",
+        "notes": "Stop DAQ",
+        "source": "Standard_Automotive_CAPL_Dictionary"
+      }
+    ],
+    "XCP / CCP": [
+      {
+        "entry": "Connect CCP to ECU [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Disconnect CCP from ECU [P1]",
+        "field": "Post Action"
+      },
+      {
+        "entry": "Read Calibration Parameter [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Start DAQ Measurement [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Stop DAQ Measurement [P1]",
+        "field": "Action"
+      },
+      {
+        "entry": "Write Calibration Parameter [P1] with Value [P2]",
+        "field": "Action"
+      }
+    ],
+    "Zonal Routing / Gateway": [
+      {
+        "entry": "Inject Gateway Routing Delay [P1] ms",
+        "field": "Action"
+      },
+      {
+        "entry": "Send CAN signal [P1] from Zone [P2] to Zone [P3]",
+        "field": "Action"
+      },
+      {
+        "entry": "Verify Gateway Latency below [P1] ms",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Gateway Translation from CAN to Ethernet for signal [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Gateway Translation from CAN to LIN for signal [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Gateway Translation from Ethernet to CAN for signal [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Gateway Translation from LIN to CAN for signal [P1]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify signal [P1] routed from Zone [P2] to Zone [P3]",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Signal Freshness Counter",
+        "field": "Expectation"
+      },
+      {
+        "entry": "Verify Signal Integrity after Routing",
+        "field": "Expectation"
+      }
+    ]
+  }
+}

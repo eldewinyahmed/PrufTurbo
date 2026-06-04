@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PrüfTurbo</title>
+  <link rel="icon" type="image/x-icon" href="/static/icons/PruefTurbo_Icon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="/static/icons/PruefTurbo_Icon.ico">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><img src="/static/icons/PruefTurbo_Icon.ico" alt="PrüfTurbo icon" class="brand-icon"><div><h1 data-i18n="app_title">PrüfTurbo</h1><p data-i18n="app_subtitle">Schnell. Präzise. Rückverfolgbar</p></div></div>
+  <div class="top-actions">
+    <label class="language-label"><span data-i18n="language">Language</span>
+      <select id="languageSelect" class="lang-select" aria-label="Language">
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+      </select>
+    </label>
+    <button id="saveSession" type="button" data-i18n="save_session">Save Session</button>
+    <button id="resetSession" class="danger" data-i18n="reset_session">Reset Session</button>
+  </div>
+</header>
+<nav>
+  <button class="tab active" data-tab="specs">Test Specs</button>
+  <button class="tab" data-tab="builder">Test Case Builder</button>
+  <button class="tab" data-tab="dictionary">Dictionary</button>
+  <button class="tab" data-tab="generation">Generation</button>
+  <button class="tab" data-tab="capl">CAPL Viewer</button>
+  <button class="tab" data-tab="traceability">Traceability</button>
+  <button class="tab" data-tab="kpi">KPI</button>
+  <button class="tab" data-tab="help" data-i18n="help">Help</button>
+</nav>
+<main>
+  <section id="specs" class="panel active">
+    <h2>Test Specifications</h2>
+    <div class="toolbar"><input type="file" id="excelFile" accept=".xlsx,.xlsm"><button id="loadSpecs">Load Specs</button><button id="expandSpecs">Expand All</button><button id="collapseSpecs">Collapse All</button></div>
+    <div id="specSummary" class="summary">No specs loaded.</div>
+    <div id="specTree" class="tree"></div>
+  </section>
+  <section id="builder" class="panel">
+    <h2>Test Case Builder</h2>
+    <p class="muted">Create or edit test cases directly in the browser. Builder rows are added to the same session list used by Generation, Traceability, KPI, and Excel export.</p>
+    <div class="toolbar">
+      <button id="newBuilder">New</button>
+      <button id="saveBuilder">Add / Save Test Case</button>
+      <button id="cloneBuilder">Clone Test Case</button>
+      <button id="deleteBuilder" class="danger">Delete Selected</button>
+      <button id="clearBuilder" class="danger">Clear All Test Cases</button>
+      <button id="exportSpecs">Export Specs Excel</button>
+    </div>
+    <div class="builder-layout">
+      <aside>
+        <input id="builderFilter" class="wide" placeholder="Filter builder test cases...">
+        <div id="builderList" class="compact-list"></div>
+      </aside>
+      <div class="builder-form">
+        <input type="hidden" id="builderRowKey">
+        <div class="formgrid builder-grid">
+          <label>TC ID<input id="bTcId" placeholder="TC_001"></label>
+          <label>Requirement ID<input id="bRequirement" placeholder="REQ-001; REQ-002"></label>
+          <label>Title<input id="bTitle" placeholder="Test case title"></label>
+          <label>Status<input id="bStatus" value="Draft"></label>
+          <label>Priority<input id="bPriority" placeholder="High / Medium / Low"></label>
+          <label>ECU<input id="bEcu" placeholder="ECU"></label>
+          <label>Author<input id="bAuthor"></label>
+          <label>Date<input id="bDate" type="date"></label>
+          <label>Reviewer<input id="bReviewer"></label>
+          <label>Test Level<input id="bTestLevel"></label>
+          <label>System<input id="bSystem"></label>
+          <label>Platform<input id="bPlatform"></label>
+          <label>Variant / Model<input id="bVariant"></label>
+          <label>Architecture<input id="bArchitecture"></label>
+          <label>Test Platform<input id="bTestPlatform"></label>
+          <label>Test Goal<input id="bTestGoal"></label>
+        </div>
+        <label>Objective / Scope<textarea id="bObjective" class="smallarea"></textarea></label>
+        <div class="step-picker">
+          <h3>Add Test Step from Dictionary</h3>
+          <div class="formgrid">
+            <label>Category<select id="stepCategory"></select></label>
+            <label>Available Step<select id="stepEntry"></select></label>
+            <label>Specs Field<select id="stepField">
+              <option value="precondition">Precondition / Pre Action</option>
+              <option value="action" selected>Action</option>
+              <option value="expectation">Expectation</option>
+              <option value="postcondition">Postcondition / Post Action</option>
+            </select></label>
+            <label>Parameter Values<input id="stepParams" placeholder="Optional: value1 | value2 | value3"></label>
+          </div>
+          <div class="toolbar">
+            <button id="addStepToBuilder" type="button">Add Step to Selected Field</button>
+            <button id="copyStepText" type="button">Copy Step Text</button>
+          </div>
+          <label>Preview of Step to Add<textarea id="stepPreview" class="smallarea" readonly placeholder="Preview appears here..."></textarea></label>
+          <p class="muted">Select a category, choose an available dictionary step, choose whether it belongs to Action, Expectation, Precondition, or Postcondition, then add it to the test case.</p>
+        </div>
+        <label>Precondition / Pre Action<textarea id="bPrecondition" class="smallarea"></textarea></label>
+        <label>Action<textarea id="bAction" class="mediumarea" placeholder="Example: Send CAN Frame ..."></textarea></label>
+        <label>Expectation<textarea id="bExpectation" class="mediumarea" placeholder="Example: Expect CAN signal ..."></textarea></label>
+        <label>Actual Results<textarea id="bActual"></textarea></label>
+        <label>Postcondition / Post Action<textarea id="bPostcondition" class="smallarea"></textarea></label>
+        <label>Environment Constraints<textarea id="bConstraints" class="smallarea"></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section id="dictionary" class="panel">
+    <h2>Dictionary Management</h2>
+    <div class="toolbar"><input type="file" id="dictionaryFile" accept=".json,.xlsx,.xlsm"><button id="uploadDictionary">Upload Dictionary</button><button id="loadDictionary">Reload</button><button id="exportDictionary">Export JSON</button><button id="createDictionary" class="danger">Create Empty</button></div>
+    <div class="formgrid">
+      <input id="dictCategory" placeholder="Category" value="General"><input id="dictField" placeholder="Field" value="Action"><input id="dictEntry" placeholder="Entry"><input id="dictTranslation" placeholder="Translation"><input id="dictNotes" placeholder="Notes"><button id="addDictionary">Add Entry</button>
+    </div>
+    <input id="dictFilter" class="wide" placeholder="Filter dictionary rows...">
+    <div id="dictionaryPreview"></div>
+  </section>
+  <section id="generation" class="panel">
+    <h2>Generation</h2>
+    <div class="toolbar"><input id="genFilter" placeholder="Filter TC ID/title, supports * ?"><label><input type="checkbox" id="genRegex"> Regex</label><button id="selectAll">Select All</button><button id="selectMatching">Select Matching</button><button id="deselectAll">Deselect All</button></div>
+    <div id="generationList"></div>
+    <div class="toolbar"><button id="generateDirect">Generate CAPL Directly</button><button id="generateDictionary">Generate From Dictionary</button></div>
+  </section>
+  <section id="capl" class="panel">
+    <h2>CAPL Viewer</h2>
+    <div class="toolbar"><input id="caplFilename" value="generated.can"><button id="saveCapl">Save</button><button id="downloadCapl">Download</button><input id="caplSearch" placeholder="Search CAPL"></div>
+    <div class="capl-code-wrap"><pre id="caplHighlight" aria-hidden="true"><code></code></pre><textarea id="caplEditor" spellcheck="false" aria-label="CAPL editor"></textarea></div>
+  </section>
+  <section id="traceability" class="panel">
+    <h2>Traceability Matrix</h2>
+    <div class="toolbar">
+      <button id="traceDownstream" type="button" class="selected">Downstream: Requirement → Test Cases</button>
+      <button id="traceUpstream" type="button">Upstream: Test Case → Requirements</button>
+      <button id="loadTraceability" type="button">Refresh Traceability</button>
+      <button id="exportTraceability" type="button">Export Traceability to Excel</button>
+    </div>
+    <div id="traceabilityTree" class="treeview"></div>
+    <div id="traceabilityTables"></div><pre id="traceabilityOutput"></pre>
+  </section>
+  <section id="kpi" class="panel">
+    <h2>KPI Dashboard</h2>
+    <button id="loadKpi">Refresh KPI</button>
+    <div id="kpiCards" class="cards"></div><pre id="kpiOutput"></pre>
+  </section>
+  <section id="help" class="panel">
+    <h2 data-i18n="help_title">Help & User Guide</h2>
+    <div id="helpContent" class="help-content"></div>
+  </section>
+</main>
+<footer id="status">Ready.</footer>
+<script src="/static/knowledge.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
