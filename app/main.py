@@ -4,14 +4,19 @@ import importlib.util
 import json
 import sys
 import uuid
-from datetime import datetime, timezone
+import os
+import hmac
+import hashlib
+import base64
+import secrets
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import openpyxl
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, Request, Response, Body
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request, Response, Body, Form
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -37,6 +42,231 @@ spec.loader.exec_module(engine)
 app = FastAPI(title="PruefTurbo Web Completed", version="2.0.0")
 app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(APP_DIR / "templates"))
+
+
+# -----------------------------------------------------------------------------
+# Authentication layer - PruefTurbo
+# -----------------------------------------------------------------------------
+# This implementation uses only Python standard library crypto primitives.
+# It creates/uses: data/users.json and data/auth_secret.key
+# Passwords are stored as PBKDF2-SHA256 hashes, never as clear text.
+
+USERS_FILE = DATA_DIR / "users.json"
+AUTH_SECRET_FILE = DATA_DIR / "auth_secret.key"
+AUTH_COOKIE_NAME = "pt_auth"
+AUTH_TTL_SECONDS = int(os.getenv("PRUEFTURBO_AUTH_TTL_SECONDS", "28800"))  # 8 hours
+
+PUBLIC_PATH_PREFIXES = (
+    "/login",
+    "/static",
+    "/favicon.ico",
+)
+PUBLIC_PATHS = {
+    "/api/health",
+}
+
+
+def _b64e(raw: bytes) -> str:
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def _b64d(value: str) -> bytes:
+    padding = "=" * (-len(value) % 4)
+    return base64.urlsafe_b64decode((value + padding).encode("ascii"))
+
+
+def _auth_secret() -> bytes:
+    if not AUTH_SECRET_FILE.exists():
+        AUTH_SECRET_FILE.write_text(secrets.token_urlsafe(48), encoding="utf-8")
+        try:
+            AUTH_SECRET_FILE.chmod(0o600)
+        except Exception:
+            pass
+    return AUTH_SECRET_FILE.read_text(encoding="utf-8").strip().encode("utf-8")
+
+
+def _hash_password(password: str, *, iterations: int = 260000) -> str:
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+    return f"pbkdf2_sha256${iterations}${_b64e(salt)}${_b64e(digest)}"
+
+
+def _verify_password(password: str, encoded: str) -> bool:
+    try:
+        algorithm, iter_s, salt_s, digest_s = encoded.split("$", 3)
+        if algorithm != "pbkdf2_sha256":
+            return False
+        iterations = int(iter_s)
+        salt = _b64d(salt_s)
+        expected = _b64d(digest_s)
+        actual = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+        return hmac.compare_digest(actual, expected)
+    except Exception:
+        return False
+
+
+def _load_users() -> Dict[str, Any]:
+    if not USERS_FILE.exists():
+        default_user = os.getenv("PRUEFTURBO_ADMIN_USER", "ahmad.doweny@gmail.com")
+        default_password = os.getenv("PRUEFTURBO_ADMIN_PASSWORD", "ChangeMe-StrongPassword-2026!")
+        payload = {
+            "schema": "pruefturbo.users.v1",
+            "created_on": datetime.now(timezone.utc).isoformat(),
+            "users": {
+                default_user.lower(): {
+                    "display_name": "PruefTurbo Admin",
+                    "password_hash": _hash_password(default_password),
+                    "role": "admin",
+                    "active": True,
+                }
+            },
+        }
+        USERS_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+        try:
+            USERS_FILE.chmod(0o600)
+        except Exception:
+            pass
+    return json.loads(USERS_FILE.read_text(encoding="utf-8"))
+
+
+def _save_users(payload: Dict[str, Any]) -> None:
+    USERS_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    try:
+        USERS_FILE.chmod(0o600)
+    except Exception:
+        pass
+
+
+def _authenticate(identifier: str, password: str) -> Optional[Dict[str, Any]]:
+    identifier = (identifier or "").strip().lower()
+    users = _load_users().get("users", {})
+    user = users.get(identifier)
+    if not user or not user.get("active", True):
+        return None
+    if not _verify_password(password, user.get("password_hash", "")):
+        return None
+    return {"username": identifier, **{k: v for k, v in user.items() if k != "password_hash"}}
+
+
+def _sign_session(username: str, expires_at: int) -> str:
+    nonce = secrets.token_urlsafe(12)
+    payload = f"{username}|{expires_at}|{nonce}"
+    sig = hmac.new(_auth_secret(), payload.encode("utf-8"), hashlib.sha256).hexdigest()
+    return _b64e(f"{payload}|{sig}".encode("utf-8"))
+
+
+def _read_session(token: Optional[str]) -> Optional[str]:
+    if not token:
+        return None
+    try:
+        decoded = _b64d(token).decode("utf-8")
+        username, exp_s, nonce, sig = decoded.rsplit("|", 3)
+        payload = f"{username}|{exp_s}|{nonce}"
+        expected = hmac.new(_auth_secret(), payload.encode("utf-8"), hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(sig, expected):
+            return None
+        if int(exp_s) < int(datetime.now(timezone.utc).timestamp()):
+            return None
+        return username
+    except Exception:
+        return None
+
+
+def _is_public_path(path: str) -> bool:
+    if path in PUBLIC_PATHS:
+        return True
+    return any(path.startswith(prefix) for prefix in PUBLIC_PATH_PREFIXES)
+
+
+def _wants_html(request: Request) -> bool:
+    accept = request.headers.get("accept", "")
+    return "text/html" in accept or request.url.path == "/"
+
+
+@app.middleware("http")
+async def require_login_middleware(request: Request, call_next):
+    path = request.url.path
+    if _is_public_path(path):
+        return await call_next(request)
+
+    username = _read_session(request.cookies.get(AUTH_COOKIE_NAME))
+    if not username:
+        if _wants_html(request):
+            return RedirectResponse(url=f"/login?next={path}", status_code=303)
+        return JSONResponse({"detail": "Authentication required"}, status_code=401)
+
+    request.state.user = username
+    return await call_next(request)
+
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request, next: str = "/"):
+    if _read_session(request.cookies.get(AUTH_COOKIE_NAME)):
+        return RedirectResponse(url=next or "/", status_code=303)
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context={"request": request, "next": next, "error": None},
+    )
+
+
+@app.post("/login", response_class=HTMLResponse)
+async def login_submit(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+    next: str = Form("/"),
+):
+    user = _authenticate(username, password)
+    if not user:
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+            context={"request": request, "next": next or "/", "error": "Invalid username/email or password."},
+            status_code=401,
+        )
+
+    expires_at = int((datetime.now(timezone.utc) + timedelta(seconds=AUTH_TTL_SECONDS)).timestamp())
+    token = _sign_session(user["username"], expires_at)
+    response = RedirectResponse(url=next or "/", status_code=303)
+    response.set_cookie(
+        AUTH_COOKIE_NAME,
+        token,
+        httponly=True,
+        samesite="lax",
+        secure=False,  # Set True after HTTPS/Nginx is configured.
+        max_age=AUTH_TTL_SECONDS,
+    )
+    return response
+
+
+@app.get("/logout")
+async def logout():
+    response = RedirectResponse(url="/login", status_code=303)
+    response.delete_cookie(AUTH_COOKIE_NAME)
+    return response
+
+
+@app.post("/api/admin/change-password")
+async def change_password(
+    request: Request,
+    current_password: str = Body(...),
+    new_password: str = Body(...),
+):
+    username = getattr(request.state, "user", None)
+    if not username:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    if len(new_password) < 12:
+        raise HTTPException(status_code=400, detail="New password must be at least 12 characters.")
+    users_payload = _load_users()
+    user = users_payload.get("users", {}).get(username)
+    if not user or not _verify_password(current_password, user.get("password_hash", "")):
+        raise HTTPException(status_code=400, detail="Current password is wrong.")
+    user["password_hash"] = _hash_password(new_password)
+    user["password_changed_on"] = datetime.now(timezone.utc).isoformat()
+    _save_users(users_payload)
+    return {"ok": True}
+
 
 # Session-local runtime state. For local single-user use this behaves like the previous app.
 # It also prevents different browser sessions from overwriting each other in memory.
