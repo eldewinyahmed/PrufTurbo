@@ -42,13 +42,18 @@ def main() -> None:
         raise SystemExit("Passwords do not match.")
     if len(password) < 12:
         raise SystemExit("Password must be at least 12 characters.")
+    role = input("Role [admin/user/viewer] (default: admin): ").strip().lower() or "admin"
+    if role not in {"admin", "user", "viewer"}:
+        raise SystemExit("Invalid role. Use admin, user, or viewer.")
     payload = load_users()
+    now = datetime.now(timezone.utc).isoformat()
     payload.setdefault("users", {})[username] = {
         "display_name": username,
         "password_hash": hash_password(password),
-        "role": "admin",
+        "role": role,
         "active": True,
-        "updated_on": datetime.now(timezone.utc).isoformat(),
+        "created_on": payload.get("users", {}).get(username, {}).get("created_on", now),
+        "updated_on": now,
     }
     USERS_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     try:
