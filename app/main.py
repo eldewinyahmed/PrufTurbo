@@ -694,6 +694,66 @@ def _testcase_to_builder_payload(tc, clone: bool = False) -> TestCaseBuilderPayl
     )
 
 
+
+
+def _testcase_from_session_dict(data: dict):
+    """Restore a TestCaseRow from a saved PruefTurbo session JSON entry."""
+    attrs = dict(data.get("attrs") or {})
+    if not attrs:
+        attrs = {
+            "TC ID": data.get("tc_id", ""),
+            "Requirement ID": data.get("requirements", ""),
+            "TC title": data.get("title", ""),
+            "Priority": data.get("priority", ""),
+            "ECU": data.get("ecu", ""),
+            "Test Specification Status": data.get("status", ""),
+        }
+    excel_row = data.get("excel_row") or 2
+    try:
+        excel_row = int(excel_row)
+    except Exception:
+        excel_row = 2
+    payload = TestCaseBuilderPayload(
+        excel_row=excel_row,
+        tc_id=str(attrs.get("TC ID") or data.get("tc_id") or ""),
+        requirement_id=str(attrs.get("Requirement ID") or data.get("requirements") or ""),
+        title=str(attrs.get("TC title") or attrs.get("Title") or data.get("title") or ""),
+        priority=str(attrs.get("Priority") or data.get("priority") or ""),
+        ecu=str(attrs.get("ECU") or attrs.get("Device") or data.get("ecu") or ""),
+        status=str(attrs.get("Test Specification Status") or attrs.get("Status") or data.get("status") or "Draft"),
+        extra_attrs=attrs,
+    )
+    return _payload_to_testcase(payload, excel_row)
+
+
+def _load_session_payload_into_state(st: Dict[str, Any], payload: dict) -> Dict[str, Any]:
+    """Load saved session JSON into the current browser session."""
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=400, detail="Invalid session file: JSON object expected.")
+    schema = payload.get("schema", "")
+    if schema and not str(schema).startswith("pruefturbo.session"):
+        raise HTTPException(status_code=400, detail=f"Unsupported session schema: {schema}")
+
+    raw_testcases = payload.get("testcases", []) or []
+    if not isinstance(raw_testcases, list):
+        raise HTTPException(status_code=400, detail="Invalid session file: testcases must be a list.")
+
+    restored_testcases = []
+    for row in raw_testcases:
+        if isinstance(row, dict):
+            restored_testcases.append(_testcase_from_session_dict(row))
+
+    dictionary_rows = payload.get("dictionary_rows", []) or []
+    if dictionary_rows and not isinstance(dictionary_rows, list):
+        raise HTTPException(status_code=400, detail="Invalid session file: dictionary_rows must be a list.")
+
+    st["testcases"] = restored_testcases
+    st["dictionary_rows"] = _with_row_ids([dict(r) for r in dictionary_rows if isinstance(r, dict)])
+    st["last_output"] = None
+    st["loaded_on"] = datetime.now(timezone.utc).isoformat()
+    _refresh_testcase_names(st)
+    return {"ok": True, "testcases": len(restored_testcases), "dictionary_rows": len(st.get("dictionary_rows", []))}
+
 def _refresh_testcase_names(st: Dict[str, Any]) -> None:
     try:
         engine.make_unique_capl_names(st.get("testcases", []))
@@ -812,6 +872,45 @@ async def save_session(request: Request, response: Response):
     out = OUTPUT_DIR / f"PruefTurbo_session_{uuid.uuid4().hex[:8]}.json"
     out.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     return FileResponse(out, filename=out.name, media_type="application/json")
+
+
+@app.get("/session/load", response_class=HTMLResponse)
+async def load_session_page(request: Request):
+    return HTMLResponse("""
+<!doctype html>
+<html lang=\"en\">
+<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>Load PrüfTurbo Session</title>
+<style>body{font-family:Arial,sans-serif;background:#f5f7fb;margin:0;color:#111827}header{background:#111827;color:white;padding:18px 28px;display:flex;justify-content:space-between}header a{color:#bfdbfe;text-decoration:none;margin-left:16px}main{max-width:720px;margin:40px auto;background:white;border:1px solid #e5e7eb;border-radius:14px;padding:24px;box-shadow:0 8px 24px rgba(15,23,42,.08)}input,button{font-size:16px}button{background:#2563eb;color:white;border:0;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer}.small{color:#6b7280;font-size:13px}</style></head>
+<body><header><strong>PrüfTurbo · Load Session</strong><nav><a href=\"/\">Back to Tool</a><a href=\"/logout\">Logout</a></nav></header>
+<main><h1>Load saved session</h1><p>Select a session JSON previously exported from <code>/api/session/save</code>.</p>
+<form action=\"/session/load\" method=\"post\" enctype=\"multipart/form-data\"><p><input type=\"file\" name=\"file\" accept=\"application/json,.json\" required></p><button type=\"submit\">Load session</button></form>
+<p class=\"small\">Loading a session replaces the current browser session state: test cases and dictionary rows.</p></main></body></html>
+""")
+
+
+@app.post("/session/load")
+async def load_session_form(request: Request, response: Response, file: UploadFile = File(...)):
+    st = _state(request, response)
+    try:
+        payload = json.loads((await file.read()).decode("utf-8"))
+        _load_session_payload_into_state(st, payload)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"Failed to load session: {exc}") from exc
+    return RedirectResponse(url="/", status_code=303)
+
+
+@app.post("/api/session/load")
+async def load_session_api(request: Request, response: Response, file: UploadFile = File(...)):
+    st = _state(request, response)
+    try:
+        payload = json.loads((await file.read()).decode("utf-8"))
+        return _load_session_payload_into_state(st, payload)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"Failed to load session: {exc}") from exc
 
 @app.post("/api/upload-specs")
 async def upload_specs(request: Request, response: Response, file: UploadFile = File(...)):
@@ -976,7 +1075,7 @@ async def generate_direct(request: Request, response: Response, payload: Generat
     out = OUTPUT_DIR / f"PruefTurbo_direct_{uuid.uuid4().hex[:8]}.can"
     out.write_text(capl, encoding="utf-8")
     st["last_output"] = str(out)
-    return {"ok": True, "filename": out.name, "download_url": f"/api/download/{out.name}", "selected_count": len(selected), "preview": capl[:10000]}
+    return {"ok": True, "filename": out.name, "download_url": f"/api/download/{out.name}", "selected_count": len(selected), "preview": capl, "preview_truncated": False}
 
 @app.post("/api/generate-dictionary")
 async def generate_dictionary(request: Request, response: Response, payload: GeneratePayload):
@@ -994,7 +1093,7 @@ async def generate_dictionary(request: Request, response: Response, payload: Gen
     out = OUTPUT_DIR / f"PruefTurbo_dictionary_{uuid.uuid4().hex[:8]}.can"
     out.write_text(capl, encoding="utf-8")
     st["last_output"] = str(out)
-    return {"ok": True, "filename": out.name, "download_url": f"/api/download/{out.name}", "selected_count": len(selected), "preview": capl[:10000]}
+    return {"ok": True, "filename": out.name, "download_url": f"/api/download/{out.name}", "selected_count": len(selected), "preview": capl, "preview_truncated": False}
 
 @app.post("/api/capl/save")
 async def save_capl(payload: SaveCaplPayload):
@@ -1011,6 +1110,32 @@ async def download(filename: str):
     if not path.exists():
         raise HTTPException(status_code=404, detail="Output file not found")
     return FileResponse(path, filename=path.name, media_type="application/octet-stream")
+
+@app.get("/api/output/{filename}/text")
+async def output_text(filename: str):
+    path = OUTPUT_DIR / Path(filename).name
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Output file not found")
+    try:
+        return {"ok": True, "filename": path.name, "content": path.read_text(encoding="utf-8")}
+    except UnicodeDecodeError:
+        return {"ok": False, "filename": path.name, "error": "Output is not a UTF-8 text file"}
+
+@app.get("/api/session/current-output")
+async def current_output(request: Request, response: Response):
+    st = _state(request, response)
+    last = st.get("last_output")
+    if not last:
+        return {"ok": False, "filename": None, "download_url": None, "content": ""}
+    path = Path(last)
+    if not path.exists():
+        return {"ok": False, "filename": path.name, "download_url": None, "content": ""}
+    content = ""
+    try:
+        content = path.read_text(encoding="utf-8")
+    except Exception:
+        pass
+    return {"ok": True, "filename": path.name, "download_url": f"/api/download/{path.name}", "content": content}
 
 @app.get("/api/traceability")
 async def traceability(request: Request, response: Response):
