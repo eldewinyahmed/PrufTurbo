@@ -1,0 +1,32 @@
+#pt-session-toolbar {
+  position: fixed;
+  top: 58px;
+  right: 18px;
+  z-index: 99999;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.96);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+#pt-session-toolbar button,
+#pt-session-toolbar a {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 11px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+}
+
+#pt-session-save { background: #2563eb; }
+#pt-session-load { background: #0f766e; }
+#pt-session-reset { background: #dc2626; }
+#pt-session-logout { background: #374151; }
