@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PrüfTurbo User Administration</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 18px 28px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: #bfdbfe; text-decoration: none; margin-left: 16px; }
+    main { max-width: 1120px; margin: 26px auto; padding: 0 18px; }
+    .card { background: white; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(15, 23, 42, .06); }
+    h1, h2 { margin-top: 0; }
+    label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 9px; box-sizing: border-box; }
+    .grid { display: grid; grid-template-columns: 1.4fr 1.4fr 1fr .7fr auto; gap: 12px; align-items: end; }
+    button { border: 0; border-radius: 9px; padding: 10px 14px; cursor: pointer; font-weight: 700; }
+    .primary { background: #2563eb; color: white; }
+    .danger { background: #dc2626; color: white; }
+    .muted { background: #e5e7eb; color: #111827; }
+    .success { color: #047857; font-weight: 700; }
+    .error { color: #b91c1c; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: middle; }
+    th { background: #f9fafb; font-size: 13px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .small { font-size: 12px; color: #6b7280; }
+    .role { min-width: 110px; }
+    .active { width: auto; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } table { font-size: 13px; } }
+  </style>
+</head>
+<body>
+<header>
+  <div><strong>PrüfTurbo</strong> · User Administration</div>
+  <nav>
+    <span class="small" style="color:#d1d5db">Admin: {{ admin.username }}</span>
+    <a href="/">Back to Tool</a>
+    <a href="/logout">Logout</a>
+  </nav>
+</header>
+<main>
+  <section class="card">
+    <h1>Manage users</h1>
+    <p class="small">Only users with role <strong>admin</strong> can open this page. Passwords are stored as PBKDF2 hashes in <code>data/users.json</code>.</p>
+    <div id="message"></div>
+  </section>
+
+  <section class="card">
+    <h2>Add new user</h2>
+    <form id="addUserForm" class="grid">
+      <div><label>Email / Username</label><input id="newUsername" required placeholder="engineer@example.com"></div>
+      <div><label>Display name</label><input id="newDisplayName" placeholder="Engineer Name"></div>
+      <div><label>Password</label><input id="newPassword" type="password" required minlength="12" placeholder="min. 12 chars"></div>
+      <div><label>Role</label><select id="newRole"><option value="user">user</option><option value="viewer">viewer</option><option value="admin">admin</option></select></div>
+      <button class="primary" type="submit">Add user</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Existing users</h2>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr><th>Username</th><th>Display name</th><th>Role</th><th>Active</th><th>Updated</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script>
+const msg = document.getElementById('message');
+function showMessage(text, isError=false){ msg.innerHTML = `<p class="${isError ? 'error' : 'success'}">${escapeHtml(text)}</p>`; }
+function escapeHtml(s){ return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+async function api(url, options={}){
+  const res = await fetch(url, {headers: {'Content-Type':'application/json'}, ...options});
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+  return data;
+}
+async function loadUsers(){
+  const data = await api('/api/admin/users');
+  const tbody = document.getElementById('usersBody');
+  tbody.innerHTML = '';
+  for(const u of data.users){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(u.username)}</strong></td>
+      <td><input value="${escapeHtml(u.display_name || '')}" data-field="display_name"></td>
+      <td><select class="role" data-field="role">
+        <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
+        <option value="user" ${u.role==='user'?'selected':''}>user</option>
+        <option value="viewer" ${u.role==='viewer'?'selected':''}>viewer</option>
+      </select></td>
+      <td><input class="active" type="checkbox" data-field="active" ${u.active?'checked':''}></td>
+      <td class="small">${escapeHtml(u.updated_on || u.created_on || '')}</td>
+      <td><div class="actions">
+        <button class="muted" data-action="save">Save</button>
+        <button class="muted" data-action="password">Set password</button>
+        <button class="danger" data-action="delete">Delete</button>
+      </div></td>`;
+    tr.querySelector('[data-action="save"]').onclick = async () => {
+      try{
+        await api(`/api/admin/users/${encodeURIComponent(u.username)}`, {method:'PUT', body: JSON.stringify({
+          display_name: tr.querySelector('[data-field="display_name"]').value,
+          role: tr.querySelector('[data-field="role"]').value,
+          active: tr.querySelector('[data-field="active"]').checked
+        })});
+        showMessage('User updated.'); await loadUsers();
+      }catch(e){ showMessage(e.message, true); }
+    };
+    tr.querySelector('[data-action="password"]').onclick = async () => {
+      const password = prompt(`New password for ${u.username} (min. 12 characters):`);
+      if(!password) return;
+      try{ await api(`/api/admin/users/${encodeURIComponent(u.username)}/password`, {method:'POST', body: JSON.stringify({password})}); showMessage('Password changed.'); }
+      catch(e){ showMessage(e.message, true); }
+    };
+    tr.querySelector('[data-action="delete"]').onclick = async () => {
+      if(!confirm(`Delete user ${u.username}?`)) return;
+      try{ await api(`/api/admin/users/${encodeURIComponent(u.username)}`, {method:'DELETE'}); showMessage('User deleted.'); await loadUsers(); }
+      catch(e){ showMessage(e.message, true); }
+    };
+    tbody.appendChild(tr);
+  }
+}
+document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try{
+    await api('/api/admin/users', {method:'POST', body: JSON.stringify({
+      username: document.getElementById('newUsername').value,
+      display_name: document.getElementById('newDisplayName').value,
+      password: document.getElementById('newPassword').value,
+      role: document.getElementById('newRole').value,
+      active: true
+    })});
+    e.target.reset(); showMessage('User added.'); await loadUsers();
+  }catch(err){ showMessage(err.message, true); }
+});
+loadUsers().catch(e => showMessage(e.message, true));
+</script>
+</body>
+</html>
