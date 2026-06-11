@@ -268,6 +268,173 @@ async def change_password(
     return {"ok": True}
 
 
+
+def _get_user_record(username: Optional[str]) -> Optional[Dict[str, Any]]:
+    if not username:
+        return None
+    return _load_users().get("users", {}).get(str(username).strip().lower())
+
+
+def _current_user(request: Request) -> Dict[str, Any]:
+    username = getattr(request.state, "user", None)
+    record = _get_user_record(username)
+    if not username or not record or not record.get("active", True):
+        raise HTTPException(status_code=401, detail="Authentication required")
+    user = {"username": username, **{k: v for k, v in record.items() if k != "password_hash"}}
+    return user
+
+
+def _require_admin(request: Request) -> Dict[str, Any]:
+    user = _current_user(request)
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Admin privilege required")
+    return user
+
+
+def _public_user(username: str, record: Dict[str, Any]) -> Dict[str, Any]:
+    return {
+        "username": username,
+        "display_name": record.get("display_name", username),
+        "role": record.get("role", "user"),
+        "active": bool(record.get("active", True)),
+        "updated_on": record.get("updated_on", ""),
+        "created_on": record.get("created_on", ""),
+        "password_changed_on": record.get("password_changed_on", ""),
+    }
+
+
+def _admin_count(users: Dict[str, Any]) -> int:
+    return sum(1 for u in users.values() if u.get("role") == "admin" and u.get("active", True))
+
+
+class AdminCreateUserPayload(BaseModel):
+    username: str
+    password: str
+    display_name: str = ""
+    role: str = "user"
+    active: bool = True
+
+
+class AdminUpdateUserPayload(BaseModel):
+    display_name: Optional[str] = None
+    role: Optional[str] = None
+    active: Optional[bool] = None
+
+
+class AdminPasswordPayload(BaseModel):
+    password: str
+
+
+VALID_ROLES = {"admin", "user", "viewer"}
+
+
+@app.get("/admin/users", response_class=HTMLResponse)
+async def admin_users_page(request: Request):
+    admin = _require_admin(request)
+    return templates.TemplateResponse(
+        request=request,
+        name="admin_users.html",
+        context={"request": request, "admin": admin},
+    )
+
+
+@app.get("/api/admin/users")
+async def admin_list_users(request: Request):
+    _require_admin(request)
+    payload = _load_users()
+    users = payload.get("users", {})
+    return {"users": [_public_user(username, record) for username, record in sorted(users.items())]}
+
+
+@app.post("/api/admin/users")
+async def admin_create_user(request: Request, payload: AdminCreateUserPayload):
+    _require_admin(request)
+    username = payload.username.strip().lower()
+    if not username:
+        raise HTTPException(status_code=400, detail="Username/email is required")
+    if len(payload.password) < 12:
+        raise HTTPException(status_code=400, detail="Password must be at least 12 characters")
+    role = payload.role.strip().lower() or "user"
+    if role not in VALID_ROLES:
+        raise HTTPException(status_code=400, detail=f"Invalid role. Use one of: {', '.join(sorted(VALID_ROLES))}")
+    users_payload = _load_users()
+    users = users_payload.setdefault("users", {})
+    if username in users:
+        raise HTTPException(status_code=409, detail="User already exists")
+    now = datetime.now(timezone.utc).isoformat()
+    users[username] = {
+        "display_name": payload.display_name.strip() or username,
+        "password_hash": _hash_password(payload.password),
+        "role": role,
+        "active": bool(payload.active),
+        "created_on": now,
+        "updated_on": now,
+    }
+    _save_users(users_payload)
+    return {"ok": True, "user": _public_user(username, users[username])}
+
+
+@app.put("/api/admin/users/{username}")
+async def admin_update_user(request: Request, username: str, payload: AdminUpdateUserPayload):
+    admin = _require_admin(request)
+    username = username.strip().lower()
+    users_payload = _load_users()
+    users = users_payload.setdefault("users", {})
+    if username not in users:
+        raise HTTPException(status_code=404, detail="User not found")
+    user = users[username]
+    old_role = user.get("role", "user")
+    old_active = bool(user.get("active", True))
+    new_role = (payload.role.strip().lower() if payload.role is not None else old_role)
+    new_active = bool(payload.active) if payload.active is not None else old_active
+    if new_role not in VALID_ROLES:
+        raise HTTPException(status_code=400, detail=f"Invalid role. Use one of: {', '.join(sorted(VALID_ROLES))}")
+    # Never allow the last active admin to be downgraded or deactivated.
+    if old_role == "admin" and old_active and (new_role != "admin" or not new_active) and _admin_count(users) <= 1:
+        raise HTTPException(status_code=400, detail="Cannot remove or deactivate the last active admin user")
+    if payload.display_name is not None:
+        user["display_name"] = payload.display_name.strip() or username
+    user["role"] = new_role
+    user["active"] = new_active
+    user["updated_on"] = datetime.now(timezone.utc).isoformat()
+    _save_users(users_payload)
+    return {"ok": True, "user": _public_user(username, user)}
+
+
+@app.post("/api/admin/users/{username}/password")
+async def admin_set_user_password(request: Request, username: str, payload: AdminPasswordPayload):
+    _require_admin(request)
+    username = username.strip().lower()
+    if len(payload.password) < 12:
+        raise HTTPException(status_code=400, detail="Password must be at least 12 characters")
+    users_payload = _load_users()
+    users = users_payload.setdefault("users", {})
+    if username not in users:
+        raise HTTPException(status_code=404, detail="User not found")
+    users[username]["password_hash"] = _hash_password(payload.password)
+    users[username]["password_changed_on"] = datetime.now(timezone.utc).isoformat()
+    users[username]["updated_on"] = datetime.now(timezone.utc).isoformat()
+    _save_users(users_payload)
+    return {"ok": True}
+
+
+@app.delete("/api/admin/users/{username}")
+async def admin_delete_user(request: Request, username: str):
+    admin = _require_admin(request)
+    username = username.strip().lower()
+    users_payload = _load_users()
+    users = users_payload.setdefault("users", {})
+    if username not in users:
+        raise HTTPException(status_code=404, detail="User not found")
+    if username == admin.get("username"):
+        raise HTTPException(status_code=400, detail="You cannot delete your own logged-in admin account")
+    target = users[username]
+    if target.get("role") == "admin" and target.get("active", True) and _admin_count(users) <= 1:
+        raise HTTPException(status_code=400, detail="Cannot delete the last active admin user")
+    del users[username]
+    _save_users(users_payload)
+    return {"ok": True}
+
 # Session-local runtime state. For local single-user use this behaves like the previous app.
 # It also prevents different browser sessions from overwriting each other in memory.
 SESSIONS: Dict[str, Dict[str, Any]] = {}
